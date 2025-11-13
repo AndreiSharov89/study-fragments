@@ -7,23 +7,46 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
+import com.example.study_fragments.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        if (savedInstanceState == null) {
-            // в этот момент мы отображаем Fragment
 
+        if (savedInstanceState == null) {
             supportFragmentManager.commit {
+                setReorderingAllowed(true)
                 add<CitiesFragment>(R.id.fragment_container_view)
             }
         }
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fragment_container_view)) { v, insets ->
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainerView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        setOnClickListeners()
+
+    }
+    private fun setOnClickListeners() {
+        binding.replaceCountryFragment.setOnClickListener {
+            supportFragmentManager.commit {
+                replace(R.id.fragment_container_view, CountriesFragment())
+                setReorderingAllowed(true)
+            }
+
+        }
+        binding.replaceBackStackCountryFragment.setOnClickListener {
+            supportFragmentManager.commit {
+                replace(R.id.fragment_container_view, CountriesFragment())
+                addToBackStack(null)
+                setReorderingAllowed(true)
+            }
         }
     }
 }
