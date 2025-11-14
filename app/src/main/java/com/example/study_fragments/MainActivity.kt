@@ -29,16 +29,22 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add(binding.fragmentContainerView.id, AuthFragment())
+            }
+        }
         //setOnClickListeners()
 
     }
+
     private fun setOnClickListeners() {
         binding.replaceCountryFragment.setOnClickListener {
             supportFragmentManager.commit {
                 replace(binding.fragmentContainerView.id, CountriesFragment())
                 setReorderingAllowed(true)
             }
-
         }
         binding.replaceBackStackCountryFragment.setOnClickListener {
             supportFragmentManager.commit {
